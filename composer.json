@@ -1,0 +1,30 @@
+{
+  "name": "cerpus/cerpusauthlib-core",
+  "description": "Library for core functionality with regards to authentication and profile data",
+  "keywords": [
+    "laravel",
+    "lumen",
+    "Cerpus JWT support library"
+  ],
+  "require": {
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8"
+  },
+  "authors": [
+    {
+      "name": "Jan-Espen Oversand",
+      "email": "jan.espen.oversand@cerpus.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Cerpus\\AuthCore\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Cerpus\\AuthCore\\": "tests/"
+    }
+  }
+}
