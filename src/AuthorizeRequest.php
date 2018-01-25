@@ -12,6 +12,7 @@ class AuthorizeRequest {
     private $language = null;
     private $singleSignoutEndpoint = null;
     private $requirements = 'v1';
+    private $nonInteractive = false;
 
     public function __construct(AuthServiceConfig $config) {
         $this->config = $config;
@@ -88,6 +89,9 @@ class AuthorizeRequest {
         if ($this->emailCode) {
             $params['email_code'] = $this->emailCode;
         }
+        if ($this->nonInteractive) {
+            $params['type'] = 'non_interactive';
+        }
 
         $authParams = http_build_query($params);
 
@@ -121,6 +125,16 @@ class AuthorizeRequest {
      */
     public function setRequirements(string $requirements): AuthorizeRequest {
         $this->requirements = $requirements;
+        return $this;
+    }
+
+    /**
+     * @param null $type
+     *
+     * @return AuthorizeRequest
+     */
+    public function setNonInteractive(bool $nonInteractive) {
+        $this->nonInteractive = $nonInteractive;
         return $this;
     }
 }
