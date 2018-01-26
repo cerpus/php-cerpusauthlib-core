@@ -65,12 +65,14 @@ class AuthorizeRequest {
         $params = [
             'client_id' => $authUser,
             'redirect_uri' => $redirectUrl,
-            'abort' => $abortUrl,
             'response_type' => 'code',
             'scope' => 'read profile',
             'state' => $state,
             'requirements' => $this->requirements,
         ];
+        if ($abortUrl !== null) {
+            $params['abort'] = $abortUrl;
+        }
         if ($this->language !== null) {
             $params['language'] = $this->language;
         }
