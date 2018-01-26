@@ -16,6 +16,10 @@ class AccessTokenManager {
         $this->session = new SessionWrapper($integration->session());
     }
 
+    public function forceRefreshAccessToken() {
+        $this->session->put('CERPUS_AUTH_EXPIRES_AT', time());
+    }
+
     public function getAccessToken() {
         $accessToken = $this->session->get('CERPUS_AUTH_ACCESS_TOKEN');
         $accessTokenExpiry = $this->session->get('CERPUS_AUTH_EXPIRES_AT');
@@ -26,27 +30,9 @@ class AccessTokenManager {
              * Considered expired .. use the refresh token
              */
 
-            $authServer = $this->config->getUrl();
-            $authUser = $this->config->getClientId();
-            $authSecret = $this->config->getSecret();
+            $accessTokenResponse = (new RefreshTokenRequest($this->config, $refreshToken))->execute();
 
-            $client = new Client(['base_uri' => $authServer]);
-
-            $uri = '/oauth/token';
-            $options = [
-                'auth' => [$authUser, $authSecret],
-                'form_params' => [
-                    'grant_type' => 'refresh_token',
-                    'refresh_token' => $refreshToken
-                ]
-            ];
-
-            $response = $client->post($uri, $options);
-
-            if ($response->getStatusCode() == 200) {
-                $accessTokenResponseBody = $response->getBody()->getContents();
-                $accessTokenResponse = json_decode($accessTokenResponseBody, false);
-
+            if ($accessTokenResponse !== null) {
                 $accessToken = $accessTokenResponse->access_token;
                 $refreshToken = $accessTokenResponse->refresh_token ? $accessTokenResponse->refresh_token : $refreshToken;
                 $expiresIn = $accessTokenResponse->expires_in ? $accessTokenResponse->expires_in : null;
