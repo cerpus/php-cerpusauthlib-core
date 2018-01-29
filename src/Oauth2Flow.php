@@ -69,7 +69,7 @@ class Oauth2Flow {
      *
      * @return Oauth2Flow
      */
-    public function setState(mixed $state): Oauth2Flow {
+    public function setState($state): Oauth2Flow {
         $this->state = $state;
         return $this;
     }
@@ -77,7 +77,7 @@ class Oauth2Flow {
     /**
      * @return mixed|null
      */
-    public function getState(): mixed {
+    public function getState() {
         return $this->state;
     }
 
@@ -103,7 +103,7 @@ class Oauth2Flow {
      *
      * @return Oauth2Flow
      */
-    public function setUsername(mixed $username): Oauth2Flow {
+    public function setUsername($username): Oauth2Flow {
         $this->username = $username;
         return $this;
     }
@@ -111,7 +111,7 @@ class Oauth2Flow {
     /**
      * @return mixed|null
      */
-    public function getUsername(): mixed {
+    public function getUsername() {
         return $this->username;
     }
 
@@ -120,7 +120,7 @@ class Oauth2Flow {
      *
      * @return Oauth2Flow
      */
-    public function setEmailId(mixed $emailId): Oauth2Flow {
+    public function setEmailId($emailId): Oauth2Flow {
         $this->emailId = $emailId;
         return $this;
     }
@@ -128,7 +128,7 @@ class Oauth2Flow {
     /**
      * @return mixed|null
      */
-    public function getEmailId(): mixed {
+    public function getEmailId() {
         return $this->emailId;
     }
 
@@ -137,7 +137,7 @@ class Oauth2Flow {
      *
      * @return Oauth2Flow
      */
-    public function setLanguage(mixed $language): Oauth2Flow {
+    public function setLanguage($language): Oauth2Flow {
         $this->language = $language;
         return $this;
     }
@@ -145,7 +145,7 @@ class Oauth2Flow {
     /**
      * @return mixed|null
      */
-    public function getLanguage(): mixed {
+    public function getLanguage() {
         return $this->language;
     }
 
@@ -154,7 +154,7 @@ class Oauth2Flow {
      *
      * @return Oauth2Flow
      */
-    public function setSingleSignoutEndpoint(mixed $singleSignoutEndpoint): Oauth2Flow {
+    public function setSingleSignoutEndpoint($singleSignoutEndpoint): Oauth2Flow {
         $this->singleSignoutEndpoint = $singleSignoutEndpoint;
         return $this;
     }
@@ -162,7 +162,7 @@ class Oauth2Flow {
     /**
      * @return mixed|null
      */
-    public function getSingleSignoutEndpoint(): mixed {
+    public function getSingleSignoutEndpoint() {
         return $this->singleSignoutEndpoint;
     }
 
@@ -184,11 +184,11 @@ class Oauth2Flow {
     }
 
     /**
-     * @param bool|mixed $nonInteractive
+     * @param bool $nonInteractive
      *
      * @return Oauth2Flow
      */
-    public function setNonInteractive($nonInteractive) {
+    public function setNonInteractive(bool $nonInteractive) {
         $this->nonInteractive = $nonInteractive;
         return $this;
     }
@@ -201,24 +201,24 @@ class Oauth2Flow {
     }
 
     /**
-     * @param mixed|null $useidp
+     * @param string $useidp
      *
      * @return Oauth2Flow
      */
-    public function setUseidp(mixed $useidp): Oauth2Flow {
+    public function setUseidp($useidp): Oauth2Flow {
         $this->useidp = $useidp;
         return $this;
     }
 
     /**
-     * @return mixed|null
+     * @return string|null
      */
-    public function getUseidp(): mixed {
+    public function getUseidp() {
         return $this->useidp;
     }
 
     /**
-     * @param null $successUrl
+     * @param string $successUrl
      *
      * @return Oauth2Flow
      */
@@ -228,14 +228,14 @@ class Oauth2Flow {
     }
 
     /**
-     * @return null
+     * @return string|null
      */
     public function getSuccessUrl() {
         return $this->successUrl;
     }
 
     /**
-     * @param null $failureUrl
+     * @param string $failureUrl
      *
      * @return Oauth2Flow
      */
@@ -245,7 +245,7 @@ class Oauth2Flow {
     }
 
     /**
-     * @return null
+     * @return string|null
      */
     public function getFailureUrl() {
         return $this->failureUrl;
