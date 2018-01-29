@@ -13,6 +13,7 @@ class AuthorizeRequest {
     private $singleSignoutEndpoint = null;
     private $requirements = 'v1';
     private $nonInteractive = false;
+    private $useidp = null;
 
     public function __construct(AuthServiceConfig $config) {
         $this->config = $config;
@@ -94,6 +95,9 @@ class AuthorizeRequest {
         if ($this->nonInteractive) {
             $params['type'] = 'non_interactive';
         }
+        if ($this->useidp) {
+            $params['useidp'] = $this->useidp;
+        }
 
         $authParams = http_build_query($params);
 
@@ -137,6 +141,16 @@ class AuthorizeRequest {
      */
     public function setNonInteractive(bool $nonInteractive) {
         $this->nonInteractive = $nonInteractive;
+        return $this;
+    }
+
+    /**
+     * @param null $useidp
+     *
+     * @return AuthorizeRequest
+     */
+    public function setUseidp($useidp) {
+        $this->useidp = $useidp;
         return $this;
     }
 }
