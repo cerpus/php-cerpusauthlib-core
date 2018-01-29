@@ -11,4 +11,6 @@ class IdentityResponse {
     public $email;
     public $additionalEmails;
     public $notVerifiedEmails;
+    public $admin;
+    public $country;
 }

@@ -48,6 +48,14 @@ class IdentityRequest {
             $identityObject->email = (isset($identity->email) && !empty($identity->email) ? $identity->email : null);
             $identityObject->notVerifiedEmails = isset($identity->notVerifiedEmails) && $identity->notVerifiedEmails ? $identity->notVerifiedEmails : [];
             $identityObject->additionalEmails = isset($identity->additionalEmails) && $identity->additionalEmails ? $identity->additionalEmails : [];
+            $identityObject->admin = isset($identity->admin) && $identity->admin ? true : false;
+            if (isset($identity->country) && $identity->country) {
+                $identityObject->country = new CountryInfo();
+                $identityObject->country->alpha2 = isset($identity->country->alpha2) && $identity->country->alpha2 ? $identity->country->alpha2 : null;
+                $identityObject->country->alpha3 = isset($identity->country->alpha3) && $identity->country->alpha3 ? $identity->country->alpha3 : null;
+            } else {
+                $identityObject->country = null;
+            }
             return $identityObject;
         } else {
             return null;
