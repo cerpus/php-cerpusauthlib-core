@@ -339,4 +339,21 @@ class Oauth2Flow {
             return $handler->failed($this);
         }
     }
+
+    /**
+     * @param mixed|null $emailCode
+     *
+     * @return Oauth2Flow
+     */
+    public function setEmailCode($emailCode): Oauth2Flow {
+        $this->emailCode = $emailCode;
+        return $this;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getEmailCode() {
+        return $this->emailCode;
+    }
 }
