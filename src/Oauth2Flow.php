@@ -23,6 +23,7 @@ class Oauth2Flow {
     private $useidp = null;
     private $successUrl = null;
     private $failureUrl = null;
+    private $returnUrl = null;
 
     protected function __construct(AuthServiceConfig $config, AuthCoreIntegration $integration, $returnParams=null) {
         $this->config = $config;
@@ -59,6 +60,9 @@ class Oauth2Flow {
             $this->useidp = static::stateField($stateData, 'useidp', null);
             $this->successUrl = static::stateField($stateData, 'successUrl', null);
             $this->failureUrl = static::stateField($stateData, 'failureUrl', null);
+            $this->returnUrl = static::stateField($stateData, 'returnUrl', null);
+
+            $this->session->remove('state-'.$this->stateId);
         } else {
             $this->stateId = sha1(mt_rand().mt_rand());
         }
@@ -264,7 +268,8 @@ class Oauth2Flow {
             'nonInteractive' => $this->nonInteractive,
             'useidp' => $this->useidp,
             'successUrl' => $this->successUrl,
-            'failureUrl' => $this->failureUrl
+            'failureUrl' => $this->failureUrl,
+            'returnUrl' => $this->returnUrl
         ];
     }
 
@@ -291,6 +296,7 @@ class Oauth2Flow {
             ->setUsername($this->username)
             ->setSingleSignoutEndpoint($this->singleSignoutEndpoint)
             ->setRequirements($this->requirements);
+        $this->returnUrl = $returnUrl;
         $this->session->put('state-'.$this->stateId, $this->stateArray());
         return $authorizeRequest->getAuthorizeUrl($returnUrl, $this->failureUrl, $this->stateId);
     }
@@ -298,7 +304,7 @@ class Oauth2Flow {
     public function handle(AuthenticationHandler $handler) {
         if ($this->code) {
             try {
-                $tokenResponse = $this->authService->authenticate($this->code);
+                $tokenResponse = (new AuthorizationCodeTokenRequest($this->config, $this->returnUrl, $this->code))->execute();
             } catch (\Exception $e) {
                 return $handler->failed($this);
             }
