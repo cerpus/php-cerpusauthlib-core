@@ -14,7 +14,9 @@ class AuthorizationCodeTokenRequest extends TokenRequest {
     }
     public function getParams() {
         $params = parent::getParams();
-        $params['redirect_uri'] = $this->redirectUri;
+        if ($this->redirectUri !== null) {
+            $params['redirect_uri'] = $this->redirectUri;
+        }
         $params['code'] = $this->code;
         return $params;
     }
