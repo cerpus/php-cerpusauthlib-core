@@ -301,10 +301,10 @@ class Oauth2Flow {
         return $authorizeRequest->getAuthorizeUrl($returnUrl, $this->failureUrl, $this->stateId);
     }
 
-    public function handle(AuthenticationHandler $handler) {
+    public function handle($redirectUri, AuthenticationHandler $handler) {
         if ($this->code) {
             try {
-                $tokenResponse = (new AuthorizationCodeTokenRequest($this->config, $this->returnUrl, $this->code))->execute();
+                $tokenResponse = (new AuthorizationCodeTokenRequest($this->config, $redirectUri, $this->code))->execute();
             } catch (\Exception $e) {
                 return $handler->failed($this, $e->getMessage());
             }
