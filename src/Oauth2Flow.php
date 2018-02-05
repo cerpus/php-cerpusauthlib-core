@@ -306,7 +306,7 @@ class Oauth2Flow {
             try {
                 $tokenResponse = (new AuthorizationCodeTokenRequest($this->config, $this->returnUrl, $this->code))->execute();
             } catch (\Exception $e) {
-                return $handler->failed($this);
+                return $handler->failed($this, $e->getMessage());
             }
             if ($tokenResponse && $tokenResponse->access_token) {
                 $identity = (new IdentityRequest($this->config, $tokenResponse))

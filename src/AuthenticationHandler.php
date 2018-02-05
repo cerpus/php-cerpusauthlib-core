@@ -26,8 +26,9 @@ interface AuthenticationHandler {
      * Authorization failed.
      *
      * @param \Cerpus\AuthCore\Oauth2Flow $flow
+     * @param mixed|null $error
      *
      * @return mixed
      */
-    public function failed(Oauth2Flow $flow);
+    public function failed(Oauth2Flow $flow, $error=null);
 }
