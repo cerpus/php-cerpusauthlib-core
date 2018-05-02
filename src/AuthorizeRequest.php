@@ -2,6 +2,8 @@
 
 namespace Cerpus\AuthCore;
 
+use GuzzleHttp\Client;
+
 class AuthorizeRequest {
     private $config;
 
@@ -105,6 +107,80 @@ class AuthorizeRequest {
     }
 
     /**
+     * @param $redirectUrl
+     * @param $abortUrl
+     * @param $state
+     * @return \Cerpus\AuthCore\AuthorizeData
+     */
+    public function executeApi($redirectUrl, $abortUrl, $state) {
+        $authServer = $this->config->getUrl();
+        $authUser = $this->config->getClientId();
+
+        $params = [
+            'clientId' => $authUser,
+            'redirectUri' => $redirectUrl,
+            'state' => $state,
+        ];
+        if ($abortUrl !== null) {
+            $params['abortUri'] = $abortUrl;
+        }
+        if ($this->language !== null) {
+            $params['language'] = $this->language;
+        }
+        if ($this->emailId) {
+            $params['emailId'] = $this->emailId;
+        }
+        if ($this->emailCode) {
+            $params['emailCode'] = $this->emailCode;
+        }
+        if ($this->nonInteractive) {
+            $params['authorizeType'] = 'non_interactive';
+        }
+
+        $uri =  $authServer . '/v1/login/authorize';
+
+        $options = [
+            "form_params" => $params
+        ];
+
+        $response = $this->httpClient()->post($uri, $options);
+
+        if ($response->getStatusCode() == 200) {
+            $responseBody = $response->getBody()->getContents();
+            $authorizeData = json_decode($responseBody, false);
+
+            $object = new AuthorizeData();
+            $object->termsAndConditions = $authorizeData->termsAndConditions;
+            $object->theme = $authorizeData->theme;
+            $object->redirectLogin = $authorizeData->redirectLogin;
+            $object->authorizeUri = $authorizeData->authorizeUri;
+            $object->codeAuthorizeUri = $authorizeData->codeAuthorizeUri;
+            $object->tokenAuthorizeUri = $authorizeData->tokenAuthorizeUri;
+            $object->redirectUri = $authorizeData->redirectUri;
+            $object->idpInfo = array_map(function ($idpDataIn) {
+                $idpData = new AuthorizeDataIdpInfo();
+                $idpData->id = $idpDataIn->id;
+                $idpData->name = $idpDataIn->name;
+                $idpData->uri = $idpDataIn->uri;
+                $idpData->popupTokenUri = $idpDataIn->popupTokenUri;
+                return $idpData;
+            }, $authorizeData->idpInfo);
+            $object->emailJwt = $authorizeData->emailJwt;
+            $object->email = $authorizeData->email;
+            $object->clientId = $authorizeData->clientId;
+            $object->abortUri = $authorizeData->abortUri;
+            $object->language = $authorizeData->language;
+            $object->languageAlpha2 = $authorizeData->languageAlpha2;
+            $object->logoutUri = $authorizeData->logoutUri;
+            $object->authorizeType = $authorizeData->authorizeType;
+            $object->username = $authorizeData->username;
+            return $object;
+        }
+
+        return null;
+    }
+
+    /**
      * @param null $language
      *
      * @return AuthorizeRequest
@@ -152,5 +228,9 @@ class AuthorizeRequest {
     public function setUseidp($useidp) {
         $this->useidp = $useidp;
         return $this;
+    }
+
+    protected function httpClient(): Client {
+        return new Client();
     }
 }
