@@ -133,7 +133,9 @@ class AuthorizeRequest {
         if ($this->emailCode) {
             $params['emailCode'] = $this->emailCode;
         }
-        if ($this->nonInteractive) {
+        if ($this->toSignup) {
+            $params['authorizeType'] = 'signup';
+        } else if ($this->nonInteractive) {
             $params['authorizeType'] = 'non_interactive';
         }
 
