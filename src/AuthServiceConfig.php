@@ -41,7 +41,14 @@ class AuthServiceConfig {
      * @return mixed
      */
     public function getUrl() {
-        return $this->url;
+        /*
+         * Consistently return without the trailing slash
+         */
+        $url = $this->url;
+        while (substr($url, -1) == "/") {
+            $url = substr($url, 0, -1);
+        }
+        return $url;
     }
 
     /**
