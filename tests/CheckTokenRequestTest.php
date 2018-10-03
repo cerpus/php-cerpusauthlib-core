@@ -74,4 +74,50 @@ class CheckTokenRequestTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(1, count($request->getHeader('Authorization')));
         $this->assertEquals('Basic '.base64_encode("clientid:secret"), $request->getHeader('Authorization')[0]);
     }
+    public function testCheckTokenClientCredentials() {
+        $responseBody = "{\"grant_type\":\"client_credentials\",\"scope\":[\"read\",\"profile\"],\"active\":true,\"exp\":1538639285,\"client_id\":\"testclient\"}";
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type', 'application/json'], $responseBody),
+            new RequestException("Error Communicating with Server", new Request('GET', 'test'))
+        ]);
+
+        $container = [];
+        $history = Middleware::history($container);
+
+        $stack = HandlerStack::create($mock);
+        $stack->push($history);
+
+        $client = new Client(['handler' => $stack]);
+
+        $config = (new AuthServiceConfig())
+            ->setUrl('http://authtest.local')
+            ->setClientId('clientid')
+            ->setSecret('secret');
+
+        $token = "testtoken";
+
+        $testCheckTokenRequest = new TestCheckTokenRequest($client, $config, $token);
+
+        $response = $testCheckTokenRequest->execute();
+
+        $this->assertNotNull($response);
+        $this->assertEquals("client_credentials", $response->getGrantType());
+        $this->assertEquals(2, count($response->getScope()));
+        $this->assertTrue(in_array("read", $response->getScope()));
+        $this->assertTrue(in_array("profile", $response->getScope()));
+        $this->assertEquals(1538639285, $response->getExpiry());
+        $this->assertEquals(0, count($response->getAuthorities()));
+        $this->assertEquals("testclient", $response->getClientId());
+
+        $this->assertEquals(1, count($container));
+        $requestResponse = $container[0];
+        /** @var Request $request */
+        $request = $requestResponse['request'];
+        $this->assertEquals('POST', $request->getMethod());
+        $uri = $request->getUri()->__toString();
+        $this->assertEquals('http://authtest.local/oauth/check_token', $uri);
+        $this->assertEquals('token=testtoken', $request->getBody()->__toString());
+        $this->assertEquals(1, count($request->getHeader('Authorization')));
+        $this->assertEquals('Basic '.base64_encode("clientid:secret"), $request->getHeader('Authorization')[0]);
+    }
 }

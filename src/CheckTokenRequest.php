@@ -46,7 +46,7 @@ class CheckTokenRequest {
             $checkToken->setScope($checkTokenResponse->scope);
             $checkToken->setActive($checkTokenResponse->active);
             $checkToken->setExpiry($checkTokenResponse->exp);
-            $checkToken->setAuthorities($checkTokenResponse->authorities);
+            $checkToken->setAuthorities(isset($checkTokenResponse->authorities) ? $checkTokenResponse->authorities : []);
             $checkToken->setClientId($checkTokenResponse->client_id);
             return $checkToken;
         } else {
