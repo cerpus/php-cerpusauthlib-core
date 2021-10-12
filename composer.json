@@ -1,7 +1,7 @@
 {
   "name": "cerpus/cerpusauthlib-core",
   "description": "Library for core functionality with regards to authentication and profile data",
-  "license": "GPL-3.0",
+  "license": "GPL-3.0-only",
   "keywords": [
     "laravel",
     "lumen",
