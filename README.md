@@ -1,4 +1,4 @@
-# cerpus/php-authlib-core
+# cerpus/cerpusauthlib-core
 
 Internal package used by [Edlib](https://github.com/cerpus/Edlib/)
 
